@@ -14,4 +14,4 @@ React code to build a simple search filter functionality to display a filtered l
 2. [Read about onChange](https://upmostly.com/tutorials/react-onchange-events-with-examples)
 
 ### My Solution in codesanbox.io
-![mysolution](https://codesandbox.io/s/pkt5ei?file=/src/components/week3/1monday/SearchFilter.jsx)
+[My solution](https://codesandbox.io/s/pkt5ei?file=/src/components/week3/1monday/SearchFilter.jsx)
