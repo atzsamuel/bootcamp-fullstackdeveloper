@@ -13,3 +13,7 @@ React code to fetch from [this](https://jsonplaceholder.typicode.com) API random
 1. [Read about fetch](https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch)
 2. [Read about useEffect](https://es.reactjs.org/docs/hooks-effect.html)
 3. [Read about useState](https://es.reactjs.org/docs/hooks-state.html)
+
+### My Solution in codesanbox.io
+
+[My solution](https://codesandbox.io/s/weeklychallangesreactjs-pkt5ei?file=/src/components/week3/2tuesday/FetchRandomUser.jsx)
