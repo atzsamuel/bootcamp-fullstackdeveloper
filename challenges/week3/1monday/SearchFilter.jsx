@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+//muestra de mensaje de error, en caso de que no encuentre ninguna fruta con el texto
 
 const SearchFilter = () => {
+  //Quetsion such as this array is outside of the function or inside the function
   const fruits = [
     "Banana",
     "Bayberries",
@@ -16,6 +18,7 @@ const SearchFilter = () => {
   const handleInputChange = (event) => {
     setTextSearch(event.target.value);
   };
+  
   return (
     <>
       <h1>Search Filter</h1>
