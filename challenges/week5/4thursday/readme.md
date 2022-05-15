@@ -10,3 +10,23 @@
 2. [sort - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
 3. [join - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join)
 4. [localCompare - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare)
+
+# My Solution
+
+[My Solution](./findChildren.js)
+
+```javascript
+function findChildren(dancingBrigade) {
+  return dancingBrigade
+    .split("")
+    .sort((a, b) => a.localeCompare(b, "kf", { caseFirst: "upper" }))
+    .join("");
+}
+```
+
+# Other Solutions
+```javascript
+function findChildren(dancingBrigade){
+  [...dancingBrigade].sort((a, b) => a.localeCompare(b, `kf`, {caseFirst: `upper`})).join(``);
+}
+```
