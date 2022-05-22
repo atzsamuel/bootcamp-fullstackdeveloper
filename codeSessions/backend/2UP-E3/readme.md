@@ -34,3 +34,24 @@ Files .env is build for every person, when someone clone repository them need cr
 SERVER_PORT = 8500;
 
 -Database configuration
+
+
+--npm start
+--npm dev// every challange is reloading the project
+
+# Backend
+## Installed packages
+
+```
+  $ npm init -y
+  -- every challange is reloading the project
+  $ npm install --save-dev nodemon
+  -- For create method post, get, put etc
+  $ npm install --save express
+  -- For create variables in file .env
+  $ npm install --save dotenv
+  -- Driver for connect to oracle database
+  $ npm install --save oracledb
+  -- For encrypt password 
+  $ npm install --save bcryptjs
+```

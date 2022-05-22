@@ -17,19 +17,19 @@
 
 ## Week challenges (Monday) 💻
 
-1. [Fun With Lists](./week5/1monday/) exercise
+1. [Fun With Lists](./1monday/) exercise
 
 ## Week challenges (Tuesday) 💻
 
-2. [Separating Strings](./week5/2tuesday/) exercise
+2. [Separating Strings](./2tuesday/) exercise
 
 ## Week challenges (Wednesday) 💻
 
-3. [Highest Scoring Word](./week5/3wednesday/) exercise
+3. [Highest Scoring Word](./3wednesday/) exercise
 
 ## Week challenges (Thursday) 💻
 
-4. [Where Is My Parent?](./week5/4thursday/) exercise
+4. [Where Is My Parent?](./4thursday/) exercise
 
 ## Week links 🔗
 
