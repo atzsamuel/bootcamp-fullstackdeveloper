@@ -1,25 +1,20 @@
 const express = require("express");
 const router = express.Router();
-//GET ALL ---> GET
-//GET BY ID ---> GET
-//POST ----> POST
 
-router.post("/category", (req, res, next) => {
-  res.status(200).json({
-    message: "POST request to /categories",
-  });
-});
+// all routes are prefixed with /api/category
+const {
+  createCategory,
+  getCategories,
+  getCategory,
+} = require("../controllers/category");
 
-router.get("/category", (req, res, next) => {
-  res.status(200).json({
-    message: "GET request to /category",
-  });
-});
+// Create caterogy endpoint (POST)
+router.post("/category", createCategory);
 
-router.get("/category/:id", (req, res, next) => {
-  res.status(200).json({
-    message: "GET request to /category id",
-  });
-});
+//Get all categories endpoint (GET)
+router.get("/category", getCategories);
+
+//Get category by id endpoint (GET)
+router.get("/category/:id", getCategory);
 
 module.exports = router;
