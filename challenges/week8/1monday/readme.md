@@ -2,8 +2,8 @@
 
 ## katacoda Link 🥋
 
-[Create docker container](https://www.katacoda.com/courses/docker/3)--
-[Docker file solution](./containerImages.dockerfile)
+[Dockerizing Node.js applications](https://www.katacoda.com/courses/docker/3)--
+[Docker file solution](./nodejs.dockerfile)
 
 # Description
 
