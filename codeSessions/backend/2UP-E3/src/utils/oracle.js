@@ -2,10 +2,10 @@ const oracledb = require("oracledb");
 const { oracleConfig } = require("../config/config");
 const path = require("path");
 
-// path to client
+// path to client, comment this for build with docker
 const oracleClient = path.join("C:", "oracle", "db_home", "bin");
 
-// init cliente
+// init cliente, comment this for build with docker, docker image get default directory
 oracledb.initOracleClient({ libDir: oracleClient });
 
 // init database

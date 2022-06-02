@@ -1,1 +1,0 @@
-# Querys for oracle Database

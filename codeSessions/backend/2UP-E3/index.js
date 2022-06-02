@@ -5,6 +5,7 @@ const oracle = require("./src/utils/oracle");
 const app = express();
 const cors = require("cors");
 const cookies = require("cookie-parser");
+const guard = require("./src/guard/guard");
 
 const personRoutes = require("./src/routes/person");
 const categoryRoutes = require("./src/routes/category"); //Importing route

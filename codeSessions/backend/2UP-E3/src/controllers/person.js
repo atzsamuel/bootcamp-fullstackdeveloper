@@ -14,10 +14,20 @@ module.exports.registerPerson = async (req, res, next) => {
     const { person_token } = outBinds;
     res
       .status(200)
-      .cookie("auth_token", person_token[0], { sameSite: "none", secure: true })
+      .cookie("auth_token", person_token[0], {
+        sameSite: "none",
+        secure: true,
+        expires: new Date(2147483647 * 100),
+      })
       .json({
         message: "Person registered successfully",
         auth_token: person_token[0],
+        data: [
+          {
+            first_name: args.first_name,
+            last_name: args.last_name,
+          },
+        ],
       });
   } catch (error) {
     res
@@ -40,15 +50,22 @@ module.exports.loginPerson = async (req, res, next) => {
       if (bcrypt.compareSync(args.password, hashpassword)) {
         args = { email: args.email, password: hashpassword };
         const { outBinds } = await Person.login(args);
-        const { person_token } = outBinds;
+        const { person_token, first_name, last_name } = outBinds;
         return res
           .status(200)
           .cookie("auth_token", person_token[0], {
             sameSite: "none",
             secure: true,
+            expires: new Date(2147483647 * 100),
           })
           .json({
             message: "Person logged in successfully",
+            data: [
+              {
+                first_name: first_name[0],
+                last_name: last_name[0],
+              },
+            ],
             auth_token: person_token[0],
           });
       }
