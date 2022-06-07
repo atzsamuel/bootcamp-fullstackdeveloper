@@ -28,143 +28,94 @@ By having a single IP address it enables the service to be load balanced across 
 ```sh
 #Service are deployed via
 $kubectl apply -f clusterip.yaml
+#The definition can be viewed at
+$cat clusterip.yaml
 #This will deploy a web app with two replicas to showcase load balancing along with a service
 $kubectl get pods
 #It will also deploy a service
 $kubectl get svc
 #More details on the service configuration and active endpoints (Pods) can be viewed via
 $kubectl describe svc/webapp1-clusterip-svc
+#After deploying, the service can be accessed via the ClusterIP allocated.
+$export CLUSTER_IP=$(kubectl get services/webapp1-clusterip-svc -o go-template='{{(index .spec.clusterIP)}}')
+$echo CLUSTER_IP=$CLUSTER_IP
+$curl $CLUSTER_IP:80
+#Multiple requests will showcase how the service load balancers across multiple Pods based on the common label selector.
+$curl $CLUSTER_IP:80
 ```
 
-# Step 2 - Create Service
+# Step 2 - Target Port
 
-Copy the Service definition to the editor. The Service selects all applications with the label webapp1. As multiple replicas, or instances, are deployed, they will be automatically load balanced based on this common label. The Service makes the application available via a NodePort.
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: webapp1-svc
-  labels:
-    app: webapp1
-spec:
-  type: NodePort
-  ports:
-    - port: 80
-      nodePort: 30080
-  selector:
-    app: webapp1
-```
+Target ports allows us to separate the port the service is available on from the port the application is listening on. TargetPort is the Port which the application is configured to listen on. Port is how the application will be accessed from the outside.
 
 ```sh
-#Deploy the Service with
-$kubectl create -f service.yaml
-#As before, details of all the Service objects deployed with
+#Similar to previously, the service and extra pods are deployed via
+$kubectl apply -f clusterip-target.yaml
+#The following commands will create the service.
+$cat clusterip-target.yaml
+$kubectl get svc;
+$kubectl describe svc/webapp1-clusterip-targetport-svc
+#After the service and pods have deployed, it can be accessed via the cluster IP as befoer, but this time on the defined port 8080
+$export CLUSTER_IP=$(kubectl get services/webapp1-clusterip-targetport-svc -o go-template='{{(index .spec.clusterIP)}}')
+$echo CLUSTER_IP=$CLUSTER_IP
+$curl $CLUSTER_IP:8080
+#The application itself is still configured to listen on port 80. Kubernetes Service manages the translation between the two
+$curl $CLUSTER_IP:8080
+```
+
+# Step 3 - NodePort
+
+While TargetPort and ClusterIP make it available to inside the cluster, the NodePort exposes the service on each Node’s IP via the defined static port. No matter which Node within the cluster is accessed, the service will be reachable based on the port number defined.
+
+```sh
+$kubectl apply -f nodeport.yaml
+#When viewing the service definition, notice the additional type and NodePort porperty defined
+$cat nodeport.yaml
 $kubectl get svc
-# By describing the object it's possible to discover more details about the configuration
-$kubectl describe svc webapp1-svc
-#For ping
-$curl host01:30080
+$kubectl describe svc/webapp1-nodeport-svc
+#The service can now be reached via the Node's IP addresss on the NodePort defined
+$curl 10.0.0.6:30080
 ```
 
-# Step 3 - Scale Deployment
+# Step 4 - External IPs
 
-Details of the YAML can be changed as different configurations are required for deployment. This follows an infrastructure as code mindset. The manifests should be kept under source control and used to ensure that the configuration in production matches the configuration in source control.
-
-Updates to existing definitions are applied using kubectl apply. To scale the number of replicas, deploy the updated YAML file using
+Another approach to making a service available outside of the cluster is via External IP addresses.
 
 ```sh
-$kubectl apply -f deployment.yaml
-#Instantly, the desired state of our cluster has been updated, viewable with
-$kubectl get deployment
-#Additional Pods will be scheduled to match the request
-$kubectl get pods
-#Issuing requests to the port will result in different containers processing the request
-$curl host01:30080
-```
-
-# Solution
-
-# Step 1 - Create Deployment
-
-One of the most common Kubernetes object is the deployment object. The deployment object defines the container spec required, along with the name and labels used by other parts of Kubernetes to discover and connect to the application.
-
-Copy the following definition to the editor. The definition defines how to launch an application called webapp1 using the Docker Image katacoda/docker-http-server that runs on Port 80.
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: webapp1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: webapp1
-  template:
-    metadata:
-      labels:
-        app: webapp1
-    spec:
-      containers:
-        - name: webapp1
-          image: katacoda/docker-http-server:latest
-          ports:
-            - containerPort: 80
-```
-
-```sh
-#This is deployed to the cluster with the command
-$kubectl create -f deployment.yaml
-#As it's deployment object, a list of all the deployed objects can be obtained via:
-$kubectl get deployment
-#Details of individual deployments can be outputted with
-$kubectl describe deployment webapp1
-```
-
-# Step 2 - Create Service
-
-Copy the Service definition to the editor. The Service selects all applications with the label webapp1. As multiple replicas, or instances, are deployed, they will be automatically load balanced based on this common label. The Service makes the application available via a NodePort.
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: webapp1-svc
-  labels:
-    app: webapp1
-spec:
-  type: NodePort
-  ports:
-    - port: 80
-      nodePort: 30080
-  selector:
-    app: webapp1
-```
-
-```sh
-#Deploy the Service with
-$kubectl create -f service.yaml
-#As before, details of all the Service objects deployed with
+#Update the definition to the current cluster's IP address with
+$sed -i 's/HOSTIP/10.0.0.6/g' externalip.yaml
+$cat externalip.yaml
+$kubectl apply -f externalip.yaml
 $kubectl get svc
-# By describing the object it's possible to discover more details about the configuration
-$kubectl describe svc webapp1-svc
-#For ping
-$curl host01:30080
+$kubectl describe svc/webapp1-externalip-svc
+#The service is now bound to the IP address and Port 80 of the master node
+$curl 10.0.0.6:80
 ```
 
-# Step 3 - Scale Deployment
+# Step 5 - Load Balancer
 
-Details of the YAML can be changed as different configurations are required for deployment. This follows an infrastructure as code mindset. The manifests should be kept under source control and used to ensure that the configuration in production matches the configuration in source control.
+When running in the cloud, such as EC2 or Azure, it's possible to configure and assign a Public IP address issued via the cloud provider. This will be issued via a Load Balancer such as ELB. This allows additional public IP addresses to be allocated to a Kubernetes cluster without interacting directly with the cloud provider.
 
-Updates to existing definitions are applied using kubectl apply. To scale the number of replicas, deploy the updated YAML file using
+As Katacoda is not a cloud provider, it's still possible to dynamically allocate IP addresses to LoadBalancer type services
 
 ```sh
-$kubectl apply -f deployment.yaml
-#Instantly, the desired state of our cluster has been updated, viewable with
-$kubectl get deployment
-#Additional Pods will be scheduled to match the request
-$kubectl get pods
-#Issuing requests to the port will result in different containers processing the request
-$curl host01:30080
+#This is done by deploying the Cloud Provider using, When running in a service provided by a Cloud Provider this isn't required
+$kubectl apply -f cloudprovider.yaml
+#When a service requests a Load Balancer, the provider will allocate one from 10.10.0.0/26 range defined in the configuration
+$kubectl get pods -n kube-system
+$kubectl apply -f loadbalancer.yaml
+#The service is configured via Load Balancer as defined in
+$cat loadbalancer.yaml
+```
+
+While the IP address is being defined, the servie will show Pending. When allocated, it will appear in the service list
+
+```sh
+$kubectl get svc
+$kubectl describe svc/webapp1-loadbalancer-svc
+#The service can now be accessed via the IP address assigned, in this case from the 10.10.0.0/26 range.
+$export LoadBalancerIP=$(kubectl get services/webapp1-loadbalancer-svc -o go-template='{{(index .status.loadBalancer.ingress 0).ip}}')
+$echo LoadBalancerIP=$LoadBalancerIP
+$curl $LoadBalancerIP
+$curl $LoadBalancerIP
 ```
