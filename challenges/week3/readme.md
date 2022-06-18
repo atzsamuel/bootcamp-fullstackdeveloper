@@ -18,8 +18,7 @@
 
 ## Week links 🔗
 
-1. [React router](https://reactrouter.com/web/guides/quick-start)
-2. [React Local Storage](https://www.js-tutorials.com/react-js/how-to-use-localstorage-with-reactjs/)
-3. [CommonJS modules](https://nodejs.org/api/modules.html)
-4. [ECMAScript modules](https://nodejs.org/api/esm.html)
-5. [Node Globals](https://nodejs.org/api/globals.html)
+1. [BEM](http://getbem.com/introduction/)
+2. [Styled Components](https://styled-components.com/)
+3. [React Bootstrap](https://react-bootstrap.github.io/)
+4. [FLexboxFroggy](https://flexboxfroggy.com/)
